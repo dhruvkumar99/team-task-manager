@@ -7,13 +7,15 @@ const { Pool } = require('pg');
 require('dotenv').config();
 
 const app = express();
+
+// Use Railway's PORT or fallback to 5000 for local development
 const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Database connection - CORRECT SSL CONFIGURATION FOR LOCAL POSTGRESQL
+// Database connection - FIXED for Railway
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
@@ -618,6 +620,8 @@ app.get('/api/users', authenticate, requireAdmin, async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+// ========== Start Server ==========
+// Listen on 0.0.0.0 to accept connections from Railway's network
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on port ${port}`);
 });
